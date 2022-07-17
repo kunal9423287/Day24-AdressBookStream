@@ -2,6 +2,10 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Map;
 
 
 public class AddressBookMainClass {
@@ -98,6 +102,9 @@ case 2:
 case 3:
 	System.out.println("Enter the person Name");
 	String deletename = sc.next();
+	System.out.println("Enter the person Name");
+	String deletename = sc.next();
+
 	addressbooks.deleteContactDetails(deletename);
 	addressbooks.addContacts();
 	break;
@@ -123,6 +130,12 @@ default:
 
 public void editContact(String name, String editFirstName, String editLastName, String editAddress, String editCity,
 	String editState, int editZip, long editPhoneNumber, String editEmail) {
+	
+	
+	AddressBook addressbook = new AddressBook();
+	
+	AddressBook addressbookdetails = addressBookSystem.get(findAddressBook);
+	
 List<Contact> contactDetails = addressbook.getContacts();
 for (int i = 0; i <= contactDetails.size() - 1; i++) {
 
@@ -139,43 +152,63 @@ for (int i = 0; i <= contactDetails.size() - 1; i++) {
 		contactperson.setEmail(editEmail);
 		contactDetails.set(i, contactperson);
 		addressbook.setContacts(contactDetails);
+		addressBookSystem.put(findAddressBook, addressbook);
 
 	}
 }
 addressbooks.displayContacts(addressbook);
 }
 
-public void displayContacts(AddressBook addressBook) {
-List<Contact> contactDetails = addressBook.getContacts();
+public void displayContacts(Map<String, AddressBook> addressBookSystem) {
 
-for (int i = 0; i <= contactDetails.size() - 1; i++) {
-	Contact contactperson = contactDetails.get(i);
-	if (!contactperson.getFirstName().equals("")) {
-		System.out.println("Conatct Details :");
-		System.out.println("FirstName :" + contactperson.getFirstName() + "      LastName :"
-				+ contactperson.getLastName() + "     Address :" + contactperson.getAddress() + "      City :"
-				+ contactperson.getCity() + "       State :" + contactperson.getState() + "     Zip :"
-				+ contactperson.getZip() + "     Phone Number :" + contactperson.getPhoneNumber());
-	} else {
+	for (Entry<String, AddressBook> set : addressBookSystem.entrySet()) {
 
-		System.out.println("No Conatct Details available :");
+		AddressBook values = set.getValue();
+		List<Contact> contactDetails = values.getContacts();
+
+		for (int i = 0; i <= contactDetails.size() - 1; i++) {
+			Contact contactperson = contactDetails.get(i);
+			if (!contactperson.getFirstName().equals("")) {
+
+				System.out.println("Conatct Details :");
+				System.out.println("Book  Name --- " + set.getKey());
+				System.out.println("FirstName :" + contactperson.getFirstName() + "      LastName :"
+						+ contactperson.getLastName() + "     Address :" + contactperson.getAddress()
+						+ "      City :" + contactperson.getCity() + "       State :" + contactperson.getState()
+						+ "     Zip :" + contactperson.getZip() + "     Phone Number :"
+						+ contactperson.getPhoneNumber());
+			} else {
+
+				System.out.println("No Conatct Details available :");
+			}
+		}
 	}
-}
 
 }
-public void deleteContactDetails(String name) {
-	List<Contact> contactDetails = addressbook.getContacts();
+public void deleteContactDetails(String name, String yourBookname) {
+
+	AddressBook addressbook = new AddressBook();
+
+	AddressBook values = addressBookSystem.get(yourBookname);
+	List<Contact> contactDetails = values.getContacts();
+
 	for (int i = 0; i <= contactDetails.size() - 1; i++) {
 		Contact contactperson = contactDetails.get(i);
 		if (contactperson.getFirstName().equals(name)) {
 			contactDetails.remove(i);
 			addressbook.setContacts(contactDetails);
+			addressBookSystem.put(yourBookname, addressbook);
 		}
 	}
+
 	System.out.println("Contact deleted Successfully");
-	addressbooks.displayContacts(addressbook);
 }
+
 public void addMultipleContacts() {
+	
+	List<Contact> contacts = new ArrayList<>();
+	System.out.println("Enter Your Address Book name ");
+	String findAddressBook = sc.next();
 
 	System.out.println("Enter the First Name");
 	String firstName = sc.next();
@@ -241,6 +274,33 @@ public void addtoOurAdrressBook(Contact contact, String addressBookName) {
 		Addressvalues.setContacts(contactsLis);
 		addressBookSystem.put(addressBookName, Addressvalues);
 	}
+	public void addtoOurAdrressBook(Contact contact, String addressBookName) {
+		List<Contact> contactsLis = new ArrayList<>();
+		AddressBook Addressvalues = new AddressBook();
+		boolean isKeyPresent = addressBookSystem.containsKey(addressBookName);
+		if (isKeyPresent) {
+			AddressBook values = addressBookSystem.get(addressBookName);
+			List<Contact> contactDetails = values.getContacts();
+			boolean isPresent = contactDetails.stream()
+					.anyMatch(con -> con.getFirstName().equals(contact.getFirstName()));
+			if (isPresent) {
+
+				System.out.println("This peson name already persent");
+
+			} else {
+				contactDetails.add(contact);
+				values.setContacts(contactDetails);
+				addressBookSystem.put(addressBookName, values);
+			}
+
+		} else {
+			contactsLis.add(contact);
+			Addressvalues.setContacts(contactsLis);
+			addressBookSystem.put(addressBookName, Addressvalues);
+		}
+	}
+
+}
 }
 
 }
