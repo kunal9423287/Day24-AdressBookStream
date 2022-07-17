@@ -109,6 +109,10 @@ case 4:
 	addressbooks.addMultipleContacts();
 	addressbooks.addContacts();
 	break;
+case 5:
+	addressbooks.displayContacts(addressBookSystem);
+	addressbooks.addContacts();
+	break;
 	
 default:
 	System.out.println("Please Enter correct choice");
@@ -221,8 +225,26 @@ public void addMultipleContacts() {
 	addressbooks.addContacts();
 
 }
+public void addtoOurAdrressBook(Contact contact, String addressBookName) {
+	List<Contact> contactsLis = new ArrayList<>();
+	AddressBook Addressvalues = new AddressBook();
+	boolean isKeyPresent = addressBookSystem.containsKey(addressBookName);
+	if (isKeyPresent) {
+		AddressBook values = addressBookSystem.get(addressBookName);
+		addressBookSystem.get(addressBookName);
+		List<Contact> contactDetails = values.getContacts();
+		contactDetails.add(contact);
+		values.setContacts(contactDetails);
+		addressBookSystem.put(addressBookName, values);
+	} else {
+		contactsLis.add(contact);
+		Addressvalues.setContacts(contactsLis);
+		addressBookSystem.put(addressBookName, Addressvalues);
+	}
+}
+
 }
 
                
-}
+
 	
