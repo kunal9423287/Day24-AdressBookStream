@@ -23,7 +23,7 @@ public class AddressBookMainClass {
 	
 	}
 
-}
+
 public void addContacts() {
 	
 	
@@ -94,6 +94,16 @@ case 2:
 	addressbooks.editContact(nameToEdit, editFirstName, editLastName, editAddress, editCity, editState, editZip,
 			editPhoneNumber, editEmail);
 	addressbooks.addContacts();
+	
+case 3:
+	System.out.println("Enter the person Name");
+	String deletename = sc.next();
+	addressbooks.deleteContactDetails(deletename);
+	addressbooks.addContacts();
+	break;
+default:
+	System.out.println("Please Enter correct choice");
+	
 }
 
 }
@@ -140,7 +150,23 @@ for (int i = 0; i <= contactDetails.size() - 1; i++) {
 }
 
 }
+public void deleteContactDetails(String name) {
+	List<Contact> contactDetails = addressbook.getContacts();
+	for (int i = 0; i <= contactDetails.size() - 1; i++) {
+		Contact contactperson = contactDetails.get(i);
+		if (contactperson.getFirstName().equals(name)) {
+			contactDetails.remove(i);
+			addressbook.setContacts(contactDetails);
+		}
+	}
+	System.out.println("Contact deleted Successfully");
+	addressbooks.displayContacts(addressbook);
+}
 
+
+
+
+               
 }
 	
 }
